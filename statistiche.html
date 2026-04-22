@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistiche Catalogo - M1 Entertainment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html, body {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            font-family: 'Open Sans', sans-serif;
+            color: #e8e8e8;
+            overflow: hidden;
+        }
+        
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: #000;
+            position: relative;
+        }
+        
+        .slides-wrapper {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .slide {
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+            text-align: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        
+        .slide.active {
+            display: flex;
+        }
+        
+        /* Slide 1: Cover */
+        .slide-1 {
+            background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
+            justify-content: center;
+        }
+        
+        .slide-1 .label {
+            font-size: 14px;
+            font-weight: 700;
+            color: #0066ff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+        }
+        
+        .slide-1 h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 72px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+        }
+        
+        .slide-1 .subtitle {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            font-weight: 700;
+            color: #0066ff;
+            margin-bottom: 40px;
+        }
+        
+        .slide-1 .divider {
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #0066ff, #ff3333);
+            margin: 0 auto 40px;
+        }
+        
+        .slide-1 .description {
+            font-size: 18px;
+            color: #e8e8e8;
+            max-width: 800px;
+            margin-bottom: 60px;
+            line-height: 1.6;
+        }
+        
+        .slide-1 .contact {
+            font-size: 13px;
+            color: #999;
+            line-height: 1.8;
+        }
+        
+        .slide-1 .contact a {
+            color: #ff3333;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        /* Slide 2: Artisti Consolidati */
+        .slide-2 {
+            background: #000;
+            justify-content: flex-start;
+            padding-top: 60px;
+        }
+        
+        .slide-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 40px;
+            width: 100%;
+            letter-spacing: -1px;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            width: 100%;
+            flex: 1;
+        }
+        
+        .table-section {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .section-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #0066ff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background: rgba(0, 102, 255, 0.1);
+            border-bottom: 2px solid #0066ff;
+            padding: 12px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: #0066ff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(0, 102, 255, 0.2);
+            font-size: 13px;
+            color: #e8e8e8;
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .artist-name {
+            font-weight: 600;
+            color: #fff;
+        }
+        
+        .stream-value {
+            color: #ff3333;
+            font-weight: 600;
+            text-align: right;
+        }
+        
+        .stats-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        
+        .stat-box {
+            background: rgba(0, 102, 255, 0.08);
+            border-left: 4px solid #0066ff;
+            padding: 20px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #0066ff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: #ff3333;
+            margin-bottom: 6px;
+        }
+        
+        .stat-description {
+            font-size: 12px;
+            color: #e8e8e8;
+            line-height: 1.4;
+        }
+        
+        /* Slide 3: Giovani Emergenti */
+        .slide-3 {
+            background: #000;
+            justify-content: flex-start;
+            padding-top: 60px;
+        }
+        
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        
+        /* Slide 4: Top Brani */
+        .slide-4 {
+            background: #000;
+            justify-content: flex-start;
+            padding-top: 60px;
+        }
+        
+        .table-wrapper {
+            width: 100%;
+            flex: 1;
+        }
+        
+        .rank-cell {
+            text-align: center;
+            font-weight: 700;
+            color: #ff3333;
+            font-size: 16px;
+        }
+        
+        .brano-name {
+            font-weight: 600;
+            color: #fff;
+        }
+        
+        .artist-name-small {
+            color: #0066ff;
+            font-size: 12px;
+        }
+        
+        /* Slide 5: Distribuzione */
+        .slide-5 {
+            background: #000;
+            justify-content: center;
+        }
+        
+        .chart-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .chart-and-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            width: 100%;
+            flex: 1;
+        }
+        
+        .chart-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .chart-canvas-wrapper {
+            position: relative;
+            width: 300px;
+            height: 300px;
+        }
+        
+        .legend {
+            margin-top: 20px;
+            font-size: 12px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            color: #e8e8e8;
+        }
+        
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            margin-right: 8px;
+            border-radius: 2px;
+        }
+        
+        /* Slide 6: Performance Metrics */
+        .slide-6 {
+            background: #000;
+            justify-content: flex-start;
+            padding-top: 60px;
+        }
+        
+        .metrics-wrapper {
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        /* Slide 7: Trend */
+        .slide-7 {
+            background: #000;
+            justify-content: flex-start;
+            padding-top: 60px;
+        }
+        
+        .trend-content {
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .trend-chart-wrapper {
+            position: relative;
+            height: 350px;
+            margin-bottom: 30px;
+        }
+        
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        
+        /* Slide 8: Conclusioni */
+        .slide-8 {
+            background: #000;
+            justify-content: center;
+        }
+        
+        .key-points {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+            width: 100%;
+        }
+        
+        .point-box {
+            background: rgba(0, 102, 255, 0.08);
+            border-left: 4px solid #0066ff;
+            padding: 20px;
+            text-align: left;
+        }
+        
+        .point-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        
+        .point-text {
+            font-size: 13px;
+            color: #e8e8e8;
+            line-height: 1.5;
+        }
+        
+        .cta-section {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(0, 102, 255, 0.2);
+            width: 100%;
+        }
+        
+        .cta-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff3333;
+            margin-bottom: 15px;
+        }
+        
+        .contact-info {
+            font-size: 13px;
+            color: #e8e8e8;
+            line-height: 1.8;
+        }
+        
+        .contact-info a {
+            color: #0066ff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        /* Navigation */
+        .nav-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            gap: 10px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.9);
+            border-top: 1px solid rgba(0, 102, 255, 0.2);
+            z-index: 100;
+        }
+        
+        button {
+            flex: 1;
+            background: #0066ff;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #0052cc;
+        }
+        
+        button:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+        
+        .slide-counter {
+            position: fixed;
+            top: 12px;
+            right: 12px;
+            font-size: 12px;
+            color: #999;
+            font-weight: 600;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 6px 10px;
+            border-radius: 4px;
+        }
+        
+        .footer-note {
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+            padding-top: 12px;
+            border-top: 1px solid rgba(0, 102, 255, 0.2);
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="slide-counter">
+            <span id="current-slide">1</span>/<span id="total-slides">8</span>
+        </div>
+        
+        <div class="slides-wrapper">
+            <!-- Slide 1: Cover -->
+            <div class="slide slide-1 active">
+                <div class="label">Catalogo M1 Entertainment</div>
+                <h1>Statistiche Catalogo</h1>
+                <div class="subtitle">Analisi Dettagliata 2026</div>
+                <div class="divider"></div>
+                <div class="description">
+                    Analisi completa delle performance del catalogo M1 Entertainment<br>
+                    con focus su artisti consolidati e giovani emergenti
+                </div>
+                <div class="contact">
+                    <p>Email: <a href="mailto:info@kgmanmusic.com">info@kgmanmusic.com</a></p>
+                    <p>Telefono: <a href="tel:+393881515963">+39 388 151 5963</a></p>
+                    <p>Sito: <a href="https://m1entertainmentcom.wordpress.com/" target="_blank">m1entertainmentcom.wordpress.com</a></p>
+                </div>
+            </div>
+            
+            <!-- Slide 2: Artisti Consolidati -->
+            <div class="slide slide-2">
+                <div class="slide-title">Artisti Consolidati</div>
+                <div class="content-grid">
+                    <div class="table-section">
+                        <div class="section-label">Stream per Artista</div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Artista</th>
+                                    <th>Stream Totali</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="artist-name">KG Man</td>
+                                    <td class="stream-value">6.494.459</td>
+                                </tr>
+                                <tr>
+                                    <td class="artist-name">Quartiere Coffee</td>
+                                    <td class="stream-value">1.420.674</td>
+                                </tr>
+                                <tr>
+                                    <td class="artist-name">Mr. Baro (Mista Lova)</td>
+                                    <td class="stream-value">335.416</td>
+                                </tr>
+                                <tr>
+                                    <td class="artist-name">Irie Stars</td>
+                                    <td class="stream-value">337.720</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="stats-section">
+                        <div class="stat-box">
+                            <div class="stat-label">Artisti Consolidati</div>
+                            <div class="stat-value">4</div>
+                            <div class="stat-description">Artisti con track record consolidato e legacy significativo</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Stream Totali</div>
+                            <div class="stat-value">8.5M+</div>
+                            <div class="stat-description">Stream aggregati dai 4 artisti consolidati</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Media per Artista</div>
+                            <div class="stat-value">2.1M</div>
+                            <div class="stat-description">Media di stream per artista consolidato</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Top Performer</div>
+                            <div class="stat-value">KG Man</div>
+                            <div class="stat-description">6.5M stream con 5 brani principali nel catalogo</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 3: Giovani Emergenti -->
+            <div class="slide slide-3">
+                <div class="slide-title">Giovani Emergenti</div>
+                <div class="content-grid">
+                    <div class="table-section">
+                        <div class="section-label">Stream per Artista</div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Artista</th>
+                                    <th>Stream</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="artist-name">Buzzi</td>
+                                    <td class="stream-value">20.289</td>
+                                </tr>
+                                <tr>
+                                    <td class="artist-name">Lamar</td>
+                                    <td class="stream-value">19.875</td>
+                                </tr>
+                                <tr>
+                                    <td class="artist-name">Blssd2Wins</td>
+                                    <td class="stream-value">13.853</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="stat-box" style="margin-top: 20px;">
+                            <div class="stat-label">Crescita Media</div>
+                            <div class="stat-value">+371%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-section">
+                        <div class="section-label">Trend di Crescita</div>
+                        <div class="chart-wrapper">
+                            <canvas id="growthChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 4: Top Brani -->
+            <div class="slide slide-4">
+                <div class="slide-title">Top Brani per Stream</div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Brano</th>
+                                <th>Artista</th>
+                                <th>Stream</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="rank-cell">1</td>
+                                <td class="brano-name">Trabajar</td>
+                                <td class="artist-name-small">KG Man</td>
+                                <td class="stream-value">4.455.149</td>
+                            </tr>
+                            <tr>
+                                <td class="rank-cell">2</td>
+                                <td class="brano-name">Reggae Ambassador</td>
+                                <td class="artist-name-small">KG Man</td>
+                                <td class="stream-value">1.119.871</td>
+                            </tr>
+                            <tr>
+                                <td class="rank-cell">3</td>
+                                <td class="brano-name">Italian Reggae Familia</td>
+                                <td class="artist-name-small">Quartiere Coffee</td>
+                                <td class="stream-value">858.947</td>
+                            </tr>
+                            <tr>
+                                <td class="rank-cell">4</td>
+                                <td class="brano-name">Sun Is Shining (Ft. KG Man)</td>
+                                <td class="artist-name-small">KG Man</td>
+                                <td class="stream-value">512.066</td>
+                            </tr>
+                            <tr>
+                                <td class="rank-cell">5</td>
+                                <td class="brano-name">In Jamaica</td>
+                                <td class="artist-name-small">Quartiere Coffee</td>
+                                <td class="stream-value">335.242</td>
+                            </tr>
+                            <tr>
+                                <td class="rank-cell">6</td>
+                                <td class="brano-name">Positive Music</td>
+                                <td class="artist-name-small">KG Man</td>
+                                <td class="stream-value">413.373</td>
+                            </tr>
+                            <tr>
+                                <td class="rank-cell">7</td>
+                                <td class="brano-name">Phantom F12</td>
+                                <td class="artist-name-small">Mr. Baro</td>
+                                <td class="stream-value">155.222</td>
+                            </tr>
+                            <tr>
+                                <td class="rank-cell">8</td>
+                                <td class="brano-name">Ancora più fuoco</td>
+                                <td class="artist-name-small">Irie Stars</td>
+                                <td class="stream-value">155.771</td>
+                            </tr>
+                            <tr>
+                                <td class="rank-cell">9</td>
+                                <td class="brano-name">No Police</td>
+                                <td class="artist-name-small">Quartiere Coffee</td>
+                                <td class="stream-value">226.485</td>
+                            </tr>
+                            <tr>
+                                <td class="rank-cell">10</td>
+                                <td class="brano-name">18 KARATI</td>
+                                <td class="artist-name-small">Buzzi</td>
+                                <td class="stream-value">11.526</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="footer-note">Dati aggiornati al 22 Aprile 2026 | Top 10 brani per stream totali nel catalogo M1</div>
+                </div>
+            </div>
+            
+            <!-- Slide 5: Distribuzione Stream -->
+            <div class="slide slide-5">
+                <div class="slide-title">Distribuzione Stream per Categoria</div>
+                <div class="chart-and-stats">
+                    <div class="chart-container">
+                        <div class="chart-canvas-wrapper">
+                            <canvas id="distributionChart"></canvas>
+                        </div>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #0066ff;"></div>
+                                <span>Artisti Consolidati</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #ff3333;"></div>
+                                <span>Giovani Emergenti</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #666;"></div>
+                                <span>Altro</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-section">
+                        <div class="stat-box">
+                            <div class="stat-label">Artisti Consolidati</div>
+                            <div class="stat-value">8.5M</div>
+                            <div class="stat-description">94.8% del catalogo totale</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Giovani Emergenti</div>
+                            <div class="stat-value">54.0K</div>
+                            <div class="stat-description">0.6% del catalogo</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Catalogo Totale</div>
+                            <div class="stat-value">8.9M</div>
+                            <div class="stat-description">Stream complessivi da 28 artisti</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Opportunità</div>
+                            <div class="stat-value">+55.7%</div>
+                            <div class="stat-description">Tasso di crescita medio del catalogo</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 6: Performance Metrics -->
+            <div class="slide slide-6">
+                <div class="slide-title">Metriche di Performance</div>
+                <div class="metrics-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Metrica</th>
+                                <th>Valore</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="metric-name">Numero Artisti</td>
+                                <td class="stream-value">28</td>
+                            </tr>
+                            <tr>
+                                <td class="metric-name">Numero Brani</td>
+                                <td class="stream-value">100+</td>
+                            </tr>
+                            <tr>
+                                <td class="metric-name">Stream Totali (12 mesi)</td>
+                                <td class="stream-value">8.9M</td>
+                            </tr>
+                            <tr>
+                                <td class="metric-name">Media Stream per Artista</td>
+                                <td class="stream-value">317.5K</td>
+                            </tr>
+                            <tr>
+                                <td class="metric-name">Media Stream per Brano</td>
+                                <td class="stream-value">89K</td>
+                            </tr>
+                            <tr>
+                                <td class="metric-name">Top Brano (Trabajar - KG Man)</td>
+                                <td class="stream-value">4.5M</td>
+                            </tr>
+                            <tr>
+                                <td class="metric-name">Tasso di Crescita Catalogo</td>
+                                <td class="stream-value">+55.7%</td>
+                            </tr>
+                            <tr>
+                                <td class="metric-name">Paesi di Distribuzione</td>
+                                <td class="stream-value">20+</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="footer-note">Dati aggiornati al 22 Aprile 2026 | Metriche aggregate del catalogo M1 Entertainment</div>
+                </div>
+            </div>
+            
+            <!-- Slide 7: Trend di Crescita -->
+            <div class="slide slide-7">
+                <div class="slide-title">Trend di Crescita</div>
+                <div class="trend-content">
+                    <div class="trend-chart-wrapper">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                    <div class="stats-row">
+                        <div class="stat-box">
+                            <div class="stat-label">Crescita Annuale</div>
+                            <div class="stat-value">+55.7%</div>
+                            <div class="stat-description">Tasso di crescita medio del catalogo nel 2025</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Baseline 2026</div>
+                            <div class="stat-value">8.9M</div>
+                            <div class="stat-description">Stream totali al 22 Aprile 2026</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Target 12 Mesi</div>
+                            <div class="stat-value">+163%</div>
+                            <div class="stat-description">Crescita prevista con supporto Sony Music</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 8: Conclusioni -->
+            <div class="slide slide-8">
+                <div class="slide-title">Conclusioni e Opportunità</div>
+                <div class="divider" style="margin-bottom: 40px;"></div>
+                <div class="key-points">
+                    <div class="point-box">
+                        <div class="point-title">Catalogo Maturo in costante crescita</div>
+                        <div class="point-text">8.9M stream da 28 artisti con track record consolidato e crescita sostenibile (+55.7% annuale)</div>
+                    </div>
+                    <div class="point-box">
+                        <div class="point-title">Pipeline Robusta</div>
+                        <div class="point-text">Giovani emergenti con crescita esplosiva (+371%) e potenziale di scaling significativo</div>
+                    </div>
+                    <div class="point-box">
+                        <div class="point-title">Operatività Plug-and-Play</div>
+                        <div class="point-text">Factory tecnica autonoma con zero dipendenze esterne e gestione asset consolidata</div>
+                    </div>
+                    <div class="point-box">
+                        <div class="point-title">Potenziale di Crescita</div>
+                        <div class="point-text">Target +163% in 12 mesi</div>
+                    </div>
+                </div>
+                <div class="cta-section">
+                    <div class="cta-title">Siamo Pronti per la Partnership</div>
+                    <div class="contact-info">
+                        <p>Email: <a href="mailto:info@kgmanmusic.com">info@kgmanmusic.com</a></p>
+                        <p>Telefono: <a href="tel:+393881515963">+39 388 151 5963</a></p>
+                        <p>Sito: <a href="https://m1entertainmentcom.wordpress.com/" target="_blank">m1entertainmentcom.wordpress.com</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="nav-container">
+        <button id="prev-btn" onclick="previousSlide()">← Indietro</button>
+        <button id="next-btn" onclick="nextSlide()">Avanti →</button>
+    </div>
+    
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 8;
+        const slides = document.querySelectorAll('.slide');
+        
+        function updateCounter() {
+            document.getElementById('current-slide').textContent = currentSlide;
+            document.getElementById('prev-btn').disabled = currentSlide === 1;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides;
+        }
+        
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            if (n > totalSlides) currentSlide = totalSlides;
+            if (n < 1) currentSlide = 1;
+            slides[currentSlide - 1].classList.add('active');
+            updateCounter();
+            
+            // Initialize charts when slide is shown
+            if (currentSlide === 3) initGrowthChart();
+            if (currentSlide === 5) initDistributionChart();
+            if (currentSlide === 7) initTrendChart();
+        }
+        
+        function nextSlide() {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+        
+        function previousSlide() {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+        
+        // Chart initialization functions
+        function initGrowthChart() {
+            const ctx = document.getElementById('growthChart');
+            if (ctx && !ctx.chart) {
+                ctx.chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Buzzi', 'Lamar', 'Blssd2Wins'],
+                        datasets: [{
+                            label: 'Stream Totali',
+                            data: [20289, 19875, 13853],
+                            backgroundColor: '#ff3333',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                grid: { color: 'rgba(0, 102, 255, 0.1)' },
+                                ticks: { color: '#999' }
+                            },
+                            y: {
+                                grid: { display: false },
+                                ticks: { color: '#e8e8e8' }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        
+        function initDistributionChart() {
+            const ctx = document.getElementById('distributionChart');
+            if (ctx && !ctx.chart) {
+                ctx.chart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Artisti Consolidati', 'Giovani Emergenti', 'Altro'],
+                        datasets: [{
+                            data: [94.8, 0.6, 4.6],
+                            backgroundColor: ['#0066ff', '#ff3333', '#666'],
+                            borderColor: '#000',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            }
+        }
+        
+        function initTrendChart() {
+            const ctx = document.getElementById('trendChart');
+            if (ctx && !ctx.chart) {
+                ctx.chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic', 'Gen26', 'Feb26', 'Mar26', 'Apr26'],
+                        datasets: [
+                            {
+                                label: 'Artisti Consolidati',
+                                data: [5200, 5400, 5600, 5800, 6000, 6200, 6400, 6600, 6800, 7000, 7200, 7400, 7600, 7800, 8000, 8500],
+                                borderColor: '#0066ff',
+                                backgroundColor: 'rgba(0, 102, 255, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4
+                            },
+                            {
+                                label: 'Giovani Emergenti',
+                                data: [5, 8, 12, 15, 18, 20, 22, 25, 28, 30, 32, 35, 38, 40, 45, 54],
+                                borderColor: '#ff3333',
+                                backgroundColor: 'rgba(255, 51, 51, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                labels: { color: '#e8e8e8', usePointStyle: true }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: { color: 'rgba(0, 102, 255, 0.1)' },
+                                ticks: { color: '#999' }
+                            },
+                            y: {
+                                grid: { color: 'rgba(0, 102, 255, 0.1)' },
+                                ticks: { color: '#999' }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        
+        // Initialize
+        updateCounter();
+    </script>
+</body>
+</html>
